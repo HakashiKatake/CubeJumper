@@ -119,8 +119,22 @@ public class Cubie : MonoBehaviour {
 
         if (col.gameObject.tag.Contains("Tile"))
         {
-            // play sound
-            audi.Play();
+            // Play the appropriate piano note based on tile type
+            if (col.gameObject.CompareTag("smallTile"))
+            {
+                // Play C3 for small tiles
+                AudioManager.Instance.PlayC3Note();
+            }
+            else if (col.gameObject.CompareTag("bigTile"))
+            {
+                // Play C6 for big tiles
+                AudioManager.Instance.PlayC6Note();
+            }
+            else
+            {
+                // Default sound for any other tiles
+                audi.Play();
+            }
             
             //update the score
             scoreText.text = (int.Parse(scoreText.text) + 1).ToString();
@@ -172,10 +186,24 @@ public class Cubie : MonoBehaviour {
             col.AddComponent<Rigidbody2D>();
 
     }
+
+    void CheckHighScore()
+{
+    int currentScore = int.Parse(scoreText.text);
+    bool isNewHighScore = HighScoreManager.Instance.CheckAndUpdateHighScore(currentScore);
+    
+    if (isNewHighScore)
+    {
+        // Optional: Show some visual feedback for new high score
+        Debug.Log("New High Score: " + currentScore);
+    }
+}
+
     void Death()
     {
         GameOverScreen.SetActive(true);
         print("Player died .......");
         isDead = true;
+        CheckHighScore();
     }
 }
