@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ff091e71d2c44ac795303ce9eba350c, type: 3}
+  m_Name: NewMelody
+  m_EditorClassIdentifier: 
+  melodyName: Twinkle Twinkle
+  songName: Twinkle Twinkle
+  description: Twinkle Twinkle
+  notes:
+  - {fileID: 8300000, guid: 788b2f6b416044cd1983256cff614f83, type: 3}
+  - {fileID: 8300000, guid: 788b2f6b416044cd1983256cff614f83, type: 3}
+  - {fileID: 8300000, guid: 6da1260dea35b4f5e9bbbbe0c71bc241, type: 3}
+  - {fileID: 8300000, guid: 788b2f6b416044cd1983256cff614f83, type: 3}
+  - {fileID: 8300000, guid: cca2b9834d9734be2bc212c4f14bcdab, type: 3}
+  - {fileID: 8300000, guid: fc76bb51f7875441798bda8fa6bba51a, type: 3}
+  loopMelody: 1
+  recommendedGameSpeed: 2

@@ -119,30 +119,52 @@ public class Cubie : MonoBehaviour {
 
         if (col.gameObject.tag.Contains("Tile"))
         {
-            // Play the appropriate piano note based on tile type
-            if (col.gameObject.CompareTag("smallTile"))
+            // Trigger visual glow effect if in musical mode
+            PianoTileVisuals tileVisuals = col.gameObject.GetComponent<PianoTileVisuals>();
+            if (tileVisuals != null)
             {
-                // Play C3 for small tiles
-                AudioManager.Instance.PlayC3Note();
+                tileVisuals.TriggerGlow();
             }
-            else if (col.gameObject.CompareTag("bigTile"))
+            
+            // Play the tile's assigned note in musical mode
+            TileNotePlayer notePlayer = col.gameObject.GetComponent<TileNotePlayer>();
+            if (notePlayer != null && notePlayer.assignedNote != null)
             {
-                // Play C6 for big tiles
-                AudioManager.Instance.PlayC6Note();
+                // Musical mode: play the specific note assigned to this tile
+                notePlayer.PlayNote();
             }
             else
             {
-                // Default sound for any other tiles
-                audi.Play();
+                // Fallback to original piano notes if not in musical mode
+                if (col.gameObject.CompareTag("smallTile"))
+                {
+                    // Play C3 for small tiles (white keys)
+                    if (AudioManager.Instance != null)
+                        AudioManager.Instance.PlayC3Note();
+                }
+                else if (col.gameObject.CompareTag("bigTile"))
+                {
+                    // Play C6 for big tiles (black keys)
+                    if (AudioManager.Instance != null)
+                        AudioManager.Instance.PlayC6Note();
+                }
+                else
+                {
+                    // Default sound for any other tiles
+                    audi.Play();
+                }
             }
             
             //update the score
             scoreText.text = (int.Parse(scoreText.text) + 1).ToString();
             
-            // change color
-            GameObject cube = col.gameObject;
-            Renderer cr = cube.GetComponent<Renderer>();
-            cr.material.SetColor("_Color", standColor[colorIndex]);
+            // change color (only in normal mode, musical mode uses piano key colors)
+            if (GameModeManager.Instance == null || !GameModeManager.Instance.IsMusicalMode())
+            {
+                GameObject cube = col.gameObject;
+                Renderer cr = cube.GetComponent<Renderer>();
+                cr.material.SetColor("_Color", standColor[colorIndex]);
+            }
 
             prevYpos = transform.position.y;
 
