@@ -98,24 +98,56 @@ public class Cubie : MonoBehaviour {
     {
         rb.velocity = Vector3.zero;
 
+        // Check if it's a perfect jump (correct jump type for tile type)
+        bool isPerfectJump = false;
+        bool isWrongJump = false;
+        
         if (lastJump == 'S' && col.gameObject.tag == "smallTile")
         {
-
+            // Perfect! Small jump on small tile
+            isPerfectJump = true;
         }
         else if (lastJump == 'B' && col.gameObject.tag == "bigTile")
         {
-
+            // Perfect! Big jump on big tile
+            isPerfectJump = true;
         }
         else if (lastJump == 'N')
         {
-
+            // First jump - no penalty
         }
-        else {
-            //print("wrong Jump  - Game Over!!!");
-            GameOverScreen.SetActive(true);
+        else
+        {
+            // Wrong jump type (big jump on small tile or vice versa)
+            // No longer causes death - just breaks combo
+            isWrongJump = true;
         }
 
-
+        // Handle combo system (only in Normal mode)
+        if (ComboSystem.Instance != null && (GameModeManager.Instance == null || !GameModeManager.Instance.IsMusicalMode()))
+        {
+            if (isPerfectJump)
+            {
+                ComboSystem.Instance.IncrementCombo();
+                
+                // Show visual feedback (optional)
+                if (ComboFeedback.Instance != null)
+                {
+                    ComboFeedback.Instance.ShowPerfectJump(transform.position, ComboSystem.Instance.GetCombo());
+                }
+            }
+            else if (isWrongJump)
+            {
+                int lostCombo = ComboSystem.Instance.GetCombo();
+                ComboSystem.Instance.BreakCombo("Wrong jump type");
+                
+                // Show visual feedback (optional)
+                if (ComboFeedback.Instance != null && lostCombo > 0)
+                {
+                    ComboFeedback.Instance.ShowComboBreak(transform.position, lostCombo);
+                }
+            }
+        }
 
         if (col.gameObject.tag.Contains("Tile"))
         {
@@ -163,7 +195,16 @@ public class Cubie : MonoBehaviour {
             {
                 GameObject cube = col.gameObject;
                 Renderer cr = cube.GetComponent<Renderer>();
-                cr.material.SetColor("_Color", standColor[colorIndex]);
+                
+                // Use ColorProgressionManager if available, otherwise use old system
+                if (ColorProgressionManager.Instance != null)
+                {
+                    cr.material.SetColor("_Color", ColorProgressionManager.Instance.GetCurrentPlayerStandColor());
+                }
+                else
+                {
+                    cr.material.SetColor("_Color", standColor[colorIndex]);
+                }
             }
 
             prevYpos = transform.position.y;

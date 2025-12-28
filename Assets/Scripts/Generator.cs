@@ -38,21 +38,39 @@ public class Generator : MonoBehaviour {
     }
     void GenerateSmallTile()
     {
-
-
         xpos += xDiff;
         Ypos += yDiffSmall;
         TilePrefab.tag = smallTag;
-        Instantiate(TilePrefab, new Vector3(xpos, Ypos, 0),TilePrefab.transform.rotation);
-     
-
+        
+        GameObject newTile = Instantiate(TilePrefab, new Vector3(xpos, Ypos, 0), TilePrefab.transform.rotation);
+        
+        // Apply current color theme if ColorProgressionManager exists
+        if (ColorProgressionManager.Instance != null)
+        {
+            Renderer tileRenderer = newTile.GetComponent<Renderer>();
+            if (tileRenderer != null && tileRenderer.material != null)
+            {
+                tileRenderer.material.SetColor("_Color", ColorProgressionManager.Instance.GetCurrentTileColor());
+            }
+        }
     }
+    
     void GenerateBigTile()
     {
         xpos += xDiff;
         Ypos += yDiffBig;
         TilePrefab.tag = bigTile;
-         Instantiate(TilePrefab, new Vector3(xpos, Ypos, 0), TilePrefab.transform.rotation);
         
+        GameObject newTile = Instantiate(TilePrefab, new Vector3(xpos, Ypos, 0), TilePrefab.transform.rotation);
+        
+        // Apply current color theme if ColorProgressionManager exists
+        if (ColorProgressionManager.Instance != null)
+        {
+            Renderer tileRenderer = newTile.GetComponent<Renderer>();
+            if (tileRenderer != null && tileRenderer.material != null)
+            {
+                tileRenderer.material.SetColor("_Color", ColorProgressionManager.Instance.GetCurrentTileColor());
+            }
+        }
     }
 }
